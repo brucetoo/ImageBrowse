@@ -66,7 +66,7 @@ public class ViewPagerFragment extends Fragment{
         position = bundle.getInt("position", 0);
         tips.setText((position + 1) + "/" + imgs.size());
 
-        viewPager.setAdapter(new PagerAdapter() {
+        viewPager.getOverscrollView().setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
                 return imgs.size();
@@ -99,7 +99,7 @@ public class ViewPagerFragment extends Fragment{
             }
         });
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.getOverscrollView().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -117,7 +117,7 @@ public class ViewPagerFragment extends Fragment{
         });
 
         //上个界面点击的位置
-        viewPager.setCurrentItem(position);
+        viewPager.getOverscrollView().setCurrentItem(position);
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
