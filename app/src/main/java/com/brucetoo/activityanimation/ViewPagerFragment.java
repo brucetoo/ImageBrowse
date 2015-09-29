@@ -15,6 +15,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
+import com.brucetoo.activityanimation.widget.ReboundViewPager;
 import com.brucetoo.activityanimation.widget.ImageInfo;
 import com.brucetoo.activityanimation.widget.PhotoView;
 
@@ -28,7 +29,7 @@ import java.util.ArrayList;
  */
 public class ViewPagerFragment extends Fragment{
 
-    private ViewPager viewPager;
+    private ReboundViewPager viewPager;
     private TextView  tips; //viewpager indicator
     private ArrayList<Integer> imgs;
     private ImageInfo imageInfo;
@@ -52,7 +53,7 @@ public class ViewPagerFragment extends Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        viewPager = (ReboundViewPager) view.findViewById(R.id.viewpager);
         tips = (TextView) view.findViewById(R.id.text);
         mask = view.findViewById(R.id.mask);
 

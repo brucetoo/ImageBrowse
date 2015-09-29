@@ -11,7 +11,7 @@
         android:background="@android:color/black"
         />
 
-    <android.support.v4.view.ViewPager
+    <com.brucetoo.activityanimation.widget.ReboundViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
