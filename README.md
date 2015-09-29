@@ -33,7 +33,8 @@ or see gift below..
 
 #ImageView transition with ViewPager
  click view to see detail in other layout...
- ###Feature
+
+ Feature:
 
     1.original view: just like normal imageview but with zoom effect
     2.detail view:
@@ -47,7 +48,8 @@ or see gift below..
 
     And also ViewPager has rebound effect when edge of ViewPager is available..
 
-
+About fragment listening onBackPressed
+see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
 
 #TODO
  add Loading State into viewPager
