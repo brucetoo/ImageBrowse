@@ -30,6 +30,10 @@ or see gift below..
 
 #ImageView transition with ViewPager
  More see detail code..
+ 
+
+#TODO
+ add Loading State into viewPager
 
 #THANKS
 PhotoView from https://github.com/bm-x/PhotoView
