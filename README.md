@@ -2,6 +2,7 @@
 IGNORE APP NAME...
 Just see WeChat IOS IOS IOS(not android) share moments,When u click friend's picture moments
 or see gift below..
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ActivityAnimation-green.svg?style=flat)](https://android-arsenal.com/details/1/2573)
 # FINAL EFFECT
 ![EFFECT](./show.gif)
 
