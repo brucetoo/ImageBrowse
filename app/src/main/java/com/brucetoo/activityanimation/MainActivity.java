@@ -31,10 +31,11 @@ import com.brucetoo.activityanimation.widget.ImageInfo;
 import com.brucetoo.activityanimation.widget.PhotoView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.ArrayList;
+
 /**
  * Created by Bruce Too
  * On 9/28/15.
@@ -119,37 +120,39 @@ public class MainActivity extends FragmentActivity {
             p.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             p.setEnabled(false);
-            ImageLoader.getInstance().displayImage(imgList.get(i),p,
+
+            //get thumbnailurl to save user data...like WeChat does
+            String thumbnailUrl = getThumbnailImageUrl(imgList.get(i),0,0);
+            ImageLoader.getInstance().displayImage(thumbnailUrl, p,
                     new DisplayImageOptions.Builder()
                             .showImageOnLoading(android.R.color.darker_gray)
-                            .cacheInMemory(true).cacheOnDisk(true).build(),loadingListener);
+                            .cacheInMemory(true).cacheOnDisk(true).build(), loadingListener);
             p.touchEnable(false);//disable touch
             return p;
         }
     }
 
-    private ImageLoadingListener loadingListener = new ImageLoadingListener() {
-        @Override
-        public void onLoadingStarted(String imageUri, View view) {
-
-        }
-
-        @Override
-        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
-        }
-
+    private ImageLoadingListener loadingListener = new SimpleImageLoadingListener() {
         @Override
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
             view.setEnabled(true);//only loadedImage is available we can click item
         }
-
-        @Override
-        public void onLoadingCancelled(String imageUri, View view) {
-
-        }
     };
 
+    /**
+     * get a thumbnail image url from original url
+     * @param imgUrl original image url
+     * @param width  width u need
+     * @param height height u need
+     * @return the number(85) in below url indicate the quality of original image
+     */
+    public String getThumbnailImageUrl(String imgUrl,int width,int height){
+        String url="http://imgsize.ph.126.net/?imgurl=data1_data2xdata3x0x85.jpg&enlarge=true";
+        width = (int) (getResources().getDisplayMetrics().density * 100);
+        height = (int) (getResources().getDisplayMetrics().density * 100); //just for convenient
+        url=url.replaceAll("data1", imgUrl).replaceAll("data2", width+"").replaceAll("data3", height+"");
+        return url;
+    }
 
     @Override
     protected void onDestroy() {

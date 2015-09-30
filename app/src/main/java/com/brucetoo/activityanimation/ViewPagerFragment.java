@@ -1,5 +1,6 @@
 package com.brucetoo.activityanimation;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,11 +16,13 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
-import com.brucetoo.activityanimation.widget.ReboundViewPager;
 import com.brucetoo.activityanimation.widget.ImageInfo;
+import com.brucetoo.activityanimation.widget.MaterialProgressBar;
 import com.brucetoo.activityanimation.widget.PhotoView;
+import com.brucetoo.activityanimation.widget.ReboundViewPager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.ArrayList;
 
@@ -29,17 +32,17 @@ import java.util.ArrayList;
  * At 19:37
  * ViewPagerFragment add into MainActivity
  */
-public class ViewPagerFragment extends Fragment{
+public class ViewPagerFragment extends Fragment {
 
     private ReboundViewPager viewPager;
-    private TextView  tips; //viewpager indicator
+    private TextView tips; //viewpager indicator
     private ArrayList<String> imgs;
     private ImageInfo imageInfo;
     private View mask;//background view
     private ArrayList<ImageInfo> imageInfos;
     private int position;
 
-    public static ViewPagerFragment getInstance(Bundle imgs){
+    public static ViewPagerFragment getInstance(Bundle imgs) {
         ViewPagerFragment fragment = new ViewPagerFragment();
         fragment.setArguments(imgs);
         return fragment;
@@ -48,7 +51,7 @@ public class ViewPagerFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_viewpager,null);
+        return inflater.inflate(R.layout.fragment_viewpager, null);
     }
 
     @Override
@@ -81,22 +84,50 @@ public class ViewPagerFragment extends Fragment{
 
             @Override
             public Object instantiateItem(ViewGroup container, int pos) {
-                PhotoView view = new PhotoView(getActivity());
-                view.touchEnable(true);
-                ImageLoader.getInstance().displayImage(imgs.get(pos), view,
-                        new DisplayImageOptions.Builder()
-                                .showImageOnLoading(android.R.color.darker_gray)
-                                .cacheInMemory(true).cacheOnDisk(true).build());
-                if(position == pos){//only animate when position equals u click in pre layout
-                    view.animateFrom(imageInfo);
+                View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_view_detail, null, false);
+                final PhotoView photoView = (PhotoView) view.findViewById(R.id.image_detail);
+                final MaterialProgressBar progressBar = (MaterialProgressBar) view.findViewById(R.id.progress);
+                if (position == pos && ImageLoader.getInstance().getDiskCache().get(imgs.get(pos)) != null) {//only animate when position equals u click in pre layout
+                    photoView.animateFrom(imageInfo);
                 }
+                //load pic from remote
+                ImageLoader.getInstance().displayImage(imgs.get(pos), photoView,
+                        new DisplayImageOptions.Builder()
+                                .cacheInMemory(true).cacheOnDisk(true).build(), new SimpleImageLoadingListener() {
+                            @Override
+                            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+                        });
+
                 //force to get focal point,to listen key listener
-                view.setFocusableInTouchMode(true);
-                view.requestFocus();
-                view.setOnKeyListener(pressKeyListener);//add key listener to listen back press
-                view.setOnClickListener(onClickListener);
-                view.setTag(pos);
+                photoView.setFocusableInTouchMode(true);
+                photoView.requestFocus();
+                photoView.setOnKeyListener(pressKeyListener);//add key listener to listen back press
+                photoView.setOnClickListener(onClickListener);
+                photoView.setTag(pos);
+                photoView.touchEnable(true);
+
                 container.addView(view);
+
+//   Sample Use Example
+//                PhotoView view = new PhotoView(getActivity());
+//                view.touchEnable(true);
+//                ImageLoader.getInstance().displayImage(imgs.get(pos), view,
+//                        new DisplayImageOptions.Builder()
+//                                .showImageOnLoading(android.R.color.darker_gray)
+//                                .cacheInMemory(true).cacheOnDisk(true).build());
+//                if(position == pos){//only animate when position equals u click in pre layout
+//                    view.animateFrom(imageInfo);
+//                }
+//                //force to get focal point,to listen key listener
+//                view.setFocusableInTouchMode(true);
+//                view.requestFocus();
+//                view.setOnKeyListener(pressKeyListener);//add key listener to listen back press
+//                view.setOnClickListener(onClickListener);
+//                view.setTag(pos);
+//                container.addView(view);
                 return view;
             }
 
@@ -139,7 +170,7 @@ public class ViewPagerFragment extends Fragment{
         int position = (int) v.getTag();
         //回到上个界面该view的位置
         runExitAnimation(v);
-        ((PhotoView)v).animateTo(imageInfos.get(position), new Runnable() {
+        ((PhotoView) v).animateTo(imageInfos.get(position), new Runnable() {
             @Override
             public void run() {
                 if (!ViewPagerFragment.this.isResumed()) {//fragment被回收
@@ -170,14 +201,14 @@ public class ViewPagerFragment extends Fragment{
 
 
     private void runEnterAnimation() {
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0,1);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
         alphaAnimation.setDuration(300);
         alphaAnimation.setInterpolator(new AccelerateInterpolator());
         mask.startAnimation(alphaAnimation);
     }
 
     public void runExitAnimation(final View view) {
-        AlphaAnimation alphaAnimation = new AlphaAnimation(1,0);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0);
         alphaAnimation.setDuration(300);
         alphaAnimation.setInterpolator(new AccelerateInterpolator());
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
