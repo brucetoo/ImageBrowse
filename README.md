@@ -31,6 +31,60 @@ or see gift below..
 About fragment listening onBackPressed
 see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
 
+#USAGE
+ *you should have a FrameLayout to hold [ViewPagerFragment](https://github.com/brucetoo/ActivityAnimation/blob/master/app/src/main/java/com/brucetoo/activityanimation/ViewPagerFragment.java) in your root layout
+  ```xml
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+               xmlns:tools="http://schemas.android.com/tools"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent">
+       ...
+          <!--ensure this layout will show in the top level of current view hierarchy-->
+      <FrameLayout
+          android:id="@+id/fragment_viewpager"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+      </FrameLayout>
+
+    </FrameLayout>
+
+  ```
+  *handle init PhotoView(also available xml)
+
+  ```java
+
+      PhotoView p = new PhotoView(MainActivity.this);
+      p.setLayoutParams(new AbsListView.LayoutParams((int) (getResources().getDisplayMetrics().density * 100), (int) (getResources().getDisplayMetrics().density * 100)));
+      p.setScaleType(ImageView.ScaleType.CENTER_CROP);
+      p.setEnabled(false);//u can't click view until image load completed
+      ...//load image and put it into PhotoView
+      p.touchEnable(false);//disable touch
+  ```
+  *handle PhotoView Click
+
+   ```java
+
+       if(view.isEnabled()) {
+       Bundle bundle = new Bundle();
+       bundle.putStringArrayList("imgs", imgList);//all PhotoView url(remote)
+       bundle.putParcelable("info", ((PhotoView) view).getInfo());//click PhotoView ImageInfo
+       bundle.putInt("position", position);//click position
+       imgImageInfos.clear();
+       //NOTE:if imgList.size >= the visible count in single screen,i will cause NullPointException
+       //because item out of screen have been replaced/reused
+       for (int i = 0; i < imgList.size(); i++) {
+           imgImageInfos.add(((PhotoView) parent.getChildAt(i)).getInfo());//remember all PhotoView ImageInfo
+       }
+       bundle.putParcelableArrayList("infos", imgImageInfos);
+       //add fragment to FrameLayout
+       getSupportFragmentManager().beginTransaction().replace(R.id.fragment_viewpager, ViewPagerFragment.getInstance(bundle), "ViewPagerFragment")
+                                   .addToBackStack(null).commit();
+       }
+
+
+   ```
+
 #ActivityAnimation Usage
 ```java
   Pre activity onCreate()..
