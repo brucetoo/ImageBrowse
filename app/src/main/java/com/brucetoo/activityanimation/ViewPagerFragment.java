@@ -78,17 +78,19 @@ public class ViewPagerFragment extends Fragment{
             }
 
             @Override
-            public Object instantiateItem(ViewGroup container, int position) {
+            public Object instantiateItem(ViewGroup container, int pos) {
                 PhotoView view = new PhotoView(getActivity());
                 view.touchEnable(true);
-                view.setImageResource(imgs.get(position));
-                view.animateFrom(imageInfo);
-                //强制获取焦点,才能监听key listener
+                view.setImageResource(imgs.get(pos));
+                if(position == pos){//only animate when position equals u click in pre layout
+                    view.animateFrom(imageInfo);
+                }
+                //force to get focal point,to listen key listener
                 view.setFocusableInTouchMode(true);
                 view.requestFocus();
                 view.setOnKeyListener(pressKeyListener);//add key listener to listen back press
                 view.setOnClickListener(onClickListener);
-                view.setTag(position);
+                view.setTag(pos);
                 container.addView(view);
                 return view;
             }
@@ -116,7 +118,7 @@ public class ViewPagerFragment extends Fragment{
             }
         });
 
-        //上个界面点击的位置
+        //set current position
         viewPager.getOverscrollView().setCurrentItem(position);
     }
 
