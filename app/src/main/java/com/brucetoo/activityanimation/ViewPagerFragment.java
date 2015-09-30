@@ -18,6 +18,8 @@ import android.widget.TextView;
 import com.brucetoo.activityanimation.widget.ReboundViewPager;
 import com.brucetoo.activityanimation.widget.ImageInfo;
 import com.brucetoo.activityanimation.widget.PhotoView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -31,7 +33,7 @@ public class ViewPagerFragment extends Fragment{
 
     private ReboundViewPager viewPager;
     private TextView  tips; //viewpager indicator
-    private ArrayList<Integer> imgs;
+    private ArrayList<String> imgs;
     private ImageInfo imageInfo;
     private View mask;//background view
     private ArrayList<ImageInfo> imageInfos;
@@ -59,7 +61,7 @@ public class ViewPagerFragment extends Fragment{
 
         runEnterAnimation();
         Bundle bundle = getArguments();
-        imgs = bundle.getIntegerArrayList("imgs");
+        imgs = bundle.getStringArrayList("imgs");
         imageInfo = bundle.getParcelable("info");
         imageInfos = bundle.getParcelableArrayList("infos");
 
@@ -81,7 +83,10 @@ public class ViewPagerFragment extends Fragment{
             public Object instantiateItem(ViewGroup container, int pos) {
                 PhotoView view = new PhotoView(getActivity());
                 view.touchEnable(true);
-                view.setImageResource(imgs.get(pos));
+                ImageLoader.getInstance().displayImage(imgs.get(pos), view,
+                        new DisplayImageOptions.Builder()
+                                .showImageOnLoading(android.R.color.darker_gray)
+                                .cacheInMemory(true).cacheOnDisk(true).build());
                 if(position == pos){//only animate when position equals u click in pre layout
                     view.animateFrom(imageInfo);
                 }

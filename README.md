@@ -9,6 +9,28 @@ or see gift below..
 # REBOUND EFFECT
 ![REBOUND](./rebound.png)
 
+#ImageView transition with ViewPager
+ click view to see detail in other layout...
+
+ Feature: Working on...
+
+    1.original view: just like normal imageview but with zoom effect
+    2.detail view:
+    ① single click back to pre layout with shrink effect
+    ② double click to zoom effect(*2.5)
+    ③ more gesture see details code
+    3.if u have more than one imageview can display with ViewPager
+    random click original imageview,and scroll ViewPager to any position,
+    than u press back key,or single click detail,u will see original view's
+    position is the same as ViewPager‘s current position.
+
+    4.load image from remote u can't click item until it finished
+
+    5.ViewPager has rebound effect when edge of ViewPager is available..
+
+About fragment listening onBackPressed
+see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
+
 #ActivityAnimation Usage
 ```java
   Pre activity onCreate()..
@@ -32,28 +54,9 @@ or see gift below..
                       }
 ```
 
-#ImageView transition with ViewPager
- click view to see detail in other layout...
-
- Feature:
-
-    1.original view: just like normal imageview but with zoom effect
-    2.detail view:
-    ① single click back to pre layout with shrink effect
-    ② double click to zoom effect(*2.5)
-    ③ more gesture see details code
-    3.if u have more than one imageview can display with ViewPager
-    random click original imageview,and scroll ViewPager to any position,
-    than u press back key,or single click detail,u will see original view's
-    position is the same as ViewPager‘s current position.
-
-    And also ViewPager has rebound effect when edge of ViewPager is available..
-
-About fragment listening onBackPressed
-see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
-
 #TODO
  1.add Loading State into viewPager
+
  2.maybe make this lib as a ***helper like ActivityTransitionEnterHelper
 
 #THANKS

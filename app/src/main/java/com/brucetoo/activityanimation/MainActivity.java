@@ -16,6 +16,7 @@
 
 package com.brucetoo.activityanimation;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -28,6 +29,10 @@ import android.widget.ImageView;
 
 import com.brucetoo.activityanimation.widget.ImageInfo;
 import com.brucetoo.activityanimation.widget.PhotoView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 /**
@@ -38,7 +43,7 @@ import java.util.ArrayList;
 public class MainActivity extends FragmentActivity {
 
     private GridView gridView;
-    private ArrayList<Integer> imgList = new ArrayList<>();
+    private ArrayList<String> imgList = new ArrayList<>();
     private ArrayList<ImageInfo> imgImageInfos = new ArrayList<>();
 
     @Override
@@ -46,15 +51,21 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        imgList.add(0, R.drawable.p1);
-        imgList.add(1, R.drawable.p2);
-        imgList.add(2, R.drawable.p3);
-        imgList.add(3, R.drawable.p4);
-        imgList.add(4, R.drawable.p1);
-        imgList.add(5, R.drawable.p2);
-        imgList.add(6, R.drawable.p3);
-        imgList.add(7, R.drawable.p4);
-        imgList.add(8, R.drawable.p1);
+//        http://img6.cache.netease.com/3g/2015/9/30/20150930091938133ad.jpg
+//        http://img2.cache.netease.com/3g/2015/9/30/2015093000515435aff.jpg
+//        http://img5.cache.netease.com/3g/2015/9/30/20150930075225737e5.jpg
+//        http://img5.cache.netease.com/3g/2015/9/29/20150929213007cd8cd.jpg
+//        http://img3.cache.netease.com/3g/2015/9/29/20150929162747a8bfa.jpg
+//        http://img2.cache.netease.com/3g/2015/9/30/20150930091208cf03c.jpg
+        imgList.add(0, "http://img6.cache.netease.com/3g/2015/9/30/20150930091938133ad.jpg");
+        imgList.add(1, "http://img2.cache.netease.com/3g/2015/9/30/2015093000515435aff.jpg");
+        imgList.add(2, "http://img5.cache.netease.com/3g/2015/9/30/20150930075225737e5.jpg");
+        imgList.add(3, "http://img5.cache.netease.com/3g/2015/9/29/20150929213007cd8cd.jpg");
+        imgList.add(4, "http://img3.cache.netease.com/3g/2015/9/29/20150929162747a8bfa.jpg");
+        imgList.add(5, "http://img2.cache.netease.com/3g/2015/9/30/20150930091208cf03c.jpg");
+        imgList.add(6, "http://img2.cache.netease.com/3g/2015/9/30/2015093000515435aff.jpg");
+        imgList.add(7, "http://img5.cache.netease.com/3g/2015/9/29/20150929213007cd8cd.jpg");
+        imgList.add(8, "http://img3.cache.netease.com/3g/2015/9/29/20150929162747a8bfa.jpg");
         gridView = (GridView) findViewById(R.id.gridview);
         final ImageAdapter adapter = new ImageAdapter();
         gridView.setAdapter(adapter);
@@ -62,20 +73,22 @@ public class MainActivity extends FragmentActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle bundle = new Bundle();
-                bundle.putIntegerArrayList("imgs", imgList);
-                bundle.putParcelable("info", ((PhotoView) view).getInfo());
-                bundle.putInt("position", position);
-                imgImageInfos.clear();
-                //NOTE:if imgList.size >= the visible count in single screen,i will cause NullPointException
-                //because item out of screen have been replaced/reused
-                for(int i = 0; i < imgList.size(); i++){
-                    imgImageInfos.add(((PhotoView)parent.getChildAt(i)).getInfo());
+                if(view.isEnabled()) {
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList("imgs", imgList);
+                    bundle.putParcelable("info", ((PhotoView) view).getInfo());
+                    bundle.putInt("position", position);
+                    imgImageInfos.clear();
+                    //NOTE:if imgList.size >= the visible count in single screen,i will cause NullPointException
+                    //because item out of screen have been replaced/reused
+                    for (int i = 0; i < imgList.size(); i++) {
+                        imgImageInfos.add(((PhotoView) parent.getChildAt(i)).getInfo());
+                    }
+                    parent.getChildAt(position);
+                    bundle.putParcelableArrayList("infos", imgImageInfos);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_viewpager, ViewPagerFragment.getInstance(bundle), "ViewPagerFragment")
+                            .addToBackStack(null).commit();
                 }
-                parent.getChildAt(position);
-                bundle.putParcelableArrayList("infos", imgImageInfos);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_viewpager, ViewPagerFragment.getInstance(bundle), "ViewPagerFragment")
-                        .addToBackStack(null).commit();
 
             }
         });
@@ -104,9 +117,45 @@ public class MainActivity extends FragmentActivity {
             PhotoView p = new PhotoView(MainActivity.this);
             p.setLayoutParams(new AbsListView.LayoutParams((int) (getResources().getDisplayMetrics().density * 100), (int) (getResources().getDisplayMetrics().density * 100)));
             p.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            p.setImageResource(imgList.get(i));
+
+            p.setEnabled(false);
+            ImageLoader.getInstance().displayImage(imgList.get(i),p,
+                    new DisplayImageOptions.Builder()
+                            .showImageOnLoading(android.R.color.darker_gray)
+                            .cacheInMemory(true).cacheOnDisk(true).build(),loadingListener);
             p.touchEnable(false);//disable touch
             return p;
         }
+    }
+
+    private ImageLoadingListener loadingListener = new ImageLoadingListener() {
+        @Override
+        public void onLoadingStarted(String imageUri, View view) {
+
+        }
+
+        @Override
+        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+        }
+
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+            view.setEnabled(true);//only loadedImage is available we can click item
+        }
+
+        @Override
+        public void onLoadingCancelled(String imageUri, View view) {
+
+        }
+    };
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //just for test to clean cache
+        ImageLoader.getInstance().clearMemoryCache();
+        ImageLoader.getInstance().clearDiskCache();
     }
 }
