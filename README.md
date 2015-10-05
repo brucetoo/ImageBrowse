@@ -32,10 +32,10 @@ About fragment listening onBackPressed
 see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
 
 #USAGE
- *you should have a FrameLayout to hold [ViewPagerFragment](https://github.com/brucetoo/ActivityAnimation/blob/master/app/src/main/java/com/brucetoo/activityanimation/ViewPagerFragment.java) in your root layout
-  ```xml
-
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ *Replace by Window.ID_ANDROID_CONTENT
+ ~~you should have a FrameLayout to hold [ViewPagerFragment](https://github.com/brucetoo/ActivityAnimation/blob/master/app/src/main/java/com/brucetoo/activityanimation/ViewPagerFragment.java) in your root layout
+ 
+ ~~<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                xmlns:tools="http://schemas.android.com/tools"
                android:layout_width="match_parent"
                android:layout_height="match_parent">
@@ -45,11 +45,9 @@ see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
           android:id="@+id/fragment_viewpager"
           android:layout_width="match_parent"
           android:layout_height="match_parent">
-      </FrameLayout>
+~~</FrameLayout>~~
+~~</FrameLayout>~~
 
-    </FrameLayout>
-
-  ```
   *handle init PhotoView(also available xml)
 
   ```java
@@ -77,8 +75,8 @@ see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
            imgImageInfos.add(((PhotoView) parent.getChildAt(i)).getInfo());//remember all PhotoView ImageInfo
        }
        bundle.putParcelableArrayList("infos", imgImageInfos);
-       //add fragment to FrameLayout
-       getSupportFragmentManager().beginTransaction().replace(R.id.fragment_viewpager, ViewPagerFragment.getInstance(bundle), "ViewPagerFragment")
+       //attach fragment to Window
+       getSupportFragmentManager().beginTransaction().replace(Window.ID_ANDROID_CONTENT, ViewPagerFragment.getInstance(bundle), "ViewPagerFragment")
                                    .addToBackStack(null).commit();
        }
 
