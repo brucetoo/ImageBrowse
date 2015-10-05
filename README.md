@@ -33,7 +33,8 @@ see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
 
 #USAGE
  *Replace by Window.ID_ANDROID_CONTENT
- ~~you should have a FrameLayout to hold [ViewPagerFragment](https://github.com/brucetoo/ActivityAnimation/blob/master/app/src/main/java/com/brucetoo/activityanimation/ViewPagerFragment.java) in your root layout
+ 
+ you should have a FrameLayout to hold [ViewPagerFragment](https://github.com/brucetoo/ActivityAnimation/blob/master/app/src/main/java/com/brucetoo/activityanimation/ViewPagerFragment.java) in your root layout
  
  ~~<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                xmlns:tools="http://schemas.android.com/tools"
