@@ -32,24 +32,8 @@ About fragment listening onBackPressed
 see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
 
 #USAGE
- *Replace by Window.ID_ANDROID_CONTENT
- 
- you should have a FrameLayout to hold [ViewPagerFragment](https://github.com/brucetoo/ActivityAnimation/blob/master/app/src/main/java/com/brucetoo/activityanimation/ViewPagerFragment.java) in your root layout
- 
- ~~<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-               xmlns:tools="http://schemas.android.com/tools"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent">
-       ...
-          <!--ensure this layout will show in the top level of current view hierarchy-->
-      <FrameLayout
-          android:id="@+id/fragment_viewpager"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent">
-~~</FrameLayout>~~
-~~</FrameLayout>~~
-
-  *handle init PhotoView(also available xml)
+  
+1.Handle init PhotoView(also available xml)
 
   ```java
 
@@ -60,11 +44,13 @@ see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
       ...//load image and put it into PhotoView
       p.touchEnable(false);//disable touch
   ```
-  *handle PhotoView Click
-
+2.Handle PhotoView Click
+  
    ```java
 
-       if(view.isEnabled()) {
+       //view is PhotoView normally,when load inmage from remote,you need call view.setEnable(false) to 
+       //let PhotoView can't be clicked util it load completed
+       if(view.isEnabled()) { 
        Bundle bundle = new Bundle();
        bundle.putStringArrayList("imgs", imgList);//all PhotoView url(remote)
        bundle.putParcelable("info", ((PhotoView) view).getInfo());//click PhotoView ImageInfo
@@ -81,8 +67,19 @@ see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
                                    .addToBackStack(null).commit();
        }
 
-
    ```
+3.If u use universalimageloader to get remote image,now is more convenient
+  
+  ```
+  dependencies {
+      compile 'com.brucetoo:library:1.0.0'{
+        exclude module: 'support-v4'
+      }
+  }
+   
+   Then use ViewPagerFragment like ’Handle PhotoView Click‘
+   
+  ```
 
 #ActivityAnimation Usage
 ```java
