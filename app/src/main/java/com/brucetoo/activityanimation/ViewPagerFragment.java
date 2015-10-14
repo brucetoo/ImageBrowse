@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.brucetoo.activityanimation.widget.ImageInfo;
@@ -169,19 +170,27 @@ public class ViewPagerFragment extends Fragment {
         //退出时点击的位置
         int position = (int) v.getTag();
         //回到上个界面该view的位置
-        runExitAnimation(v);
-        ((PhotoView) v).animateTo(imageInfos.get(position), new Runnable() {
-            @Override
-            public void run() {
-                if (!ViewPagerFragment.this.isResumed()) {//fragment被回收
-                    return;
+        if(((FrameLayout)v.getParent()).getChildAt(1).getVisibility() == View.VISIBLE){
+            popFragment();
+        }else {
+            runExitAnimation(v);
+            ((PhotoView) v).animateTo(imageInfos.get(position), new Runnable() {
+                @Override
+                public void run() {
+                    popFragment();
                 }
-                final FragmentManager fragmentManager = getFragmentManager();
-                if (fragmentManager != null) {
-                    fragmentManager.popBackStack();//回退栈
-                }
-            }
-        });
+            });
+        }
+    }
+
+    private void popFragment() {
+        if (!ViewPagerFragment.this.isResumed()) {
+            return;
+        }
+        final FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager != null) {
+            fragmentManager.popBackStack();
+        }
     }
 
 
