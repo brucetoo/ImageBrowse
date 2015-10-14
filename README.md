@@ -107,8 +107,6 @@ see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
 #TODO
  ~~1.add Loading State into viewPager~~
 
- 2.maybe make this lib as a ***helper like ActivityTransitionEnterHelper
-
 #THANKS
 PhotoView from https://github.com/bm-x/PhotoView
 
