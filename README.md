@@ -1,7 +1,7 @@
-# ActivityAnimation helper and ImageView transition With ViewPager
-IGNORE APP NAME...
-Just see WeChat IOS IOS IOS(not android) share moments,When u click friend's picture moments
-or see gift below..
+# ImageBrowse fragment can use to browse image with transition animation
+
+The same as the latest android WeChat moments image browse effect 
+
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ActivityAnimation-green.svg?style=flat)](https://android-arsenal.com/details/1/2573)
 # FINAL EFFECT
 ![EFFECT](./show.gif)
@@ -9,10 +9,8 @@ or see gift below..
 # REBOUND EFFECT
 ![REBOUND](./rebound.png)
 
-#ImageView transition with ViewPager
- click view to see detail in other layout...
-
- Feature: Working on...
+ Feature:
+  New add padding and margin support in ImageBrowseFragment
 
     1.original view: just like normal imageview but with zoom effect
     2.detail view:
@@ -28,9 +26,6 @@ or see gift below..
 
     5.ViewPager has rebound effect when edge of ViewPager is available..
 
-About fragment listening onBackPressed
-see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
-
 #USAGE
   
 1.Handle init PhotoView(also available xml)
@@ -42,13 +37,13 @@ see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
       p.setScaleType(ImageView.ScaleType.CENTER_CROP);
       p.setEnabled(false);//u can't click view until image load completed
       ...//load image and put it into PhotoView
-      p.touchEnable(false);//disable touch
+      p.disenable(false);//disable touch
   ```
 2.Handle PhotoView Click
   
    ```java
 
-       //view is PhotoView normally,when load inmage from remote,you need call view.setEnable(false) to 
+       //view is PhotoView normally,when load inmage from remote,you need call view.enable() to 
        //let PhotoView can't be clicked util it load completed
        if(view.isEnabled()) { 
        Bundle bundle = new Bundle();
@@ -63,49 +58,18 @@ see this gist https://gist.github.com/brucetoo/f7c9bcabe2ce51610ccf
        }
        bundle.putParcelableArrayList("infos", imgImageInfos);
        //attach fragment to Window
-       getSupportFragmentManager().beginTransaction().replace(Window.ID_ANDROID_CONTENT, ViewPagerFragment.getInstance(bundle), "ViewPagerFragment")
+       getSupportFragmentManager().beginTransaction().replace(Window.ID_ANDROID_CONTENT, ImageBrowseFragment.getInstance(bundle), "ViewPagerFragment")
                                    .addToBackStack(null).commit();
        }
 
    ```
-3.If u use universalimageloader to get remote image,now is more convenient
-  
-  ```
-  dependencies {
-      compile 'com.brucetoo:library:1.0.0'{
-        exclude module: 'support-v4'
-      }
-  }
    
-   Then use ViewPagerFragment like ’Handle PhotoView Click‘
-   
-  ```
+   More detail please see demo code.
 
-#ActivityAnimation Usage
-```java
-  Pre activity onCreate()..
-  ActivityTransitionEnterHelper.with(this).fromView(fromView).imageUrl(imgUrl).start(Test.class);
-  Sub activity onCreate()..
-  transitionExitHelper = ActivityTransitionExitHelper.with(getIntent()).toView(mImageView).background(mBackgroudnView).start(savedInstanceState);
-                      @Override
-                      public void onBackPressed() {
-                          transitionExitHelper.runExitAnimation(new Runnable() {
-                              @Override
-                              public void run() {
-                                  finish();
-                              }
-                          });
-                      }
-                      @Override
-                      public void finish() {
-                          super.finish();
-                          // override transitions to skip the standard window animations
-                          overridePendingTransition(0, 0);
-                      }
-```
-
-#TODO
- ~~1.add Loading State into viewPager~~
+#NOTE
+ **if you use ReboundViewPager to get rebound effect,this way may cause a problem when doing scale operation at first or last PhotoView 
+ try use ViewPager instead**
+ 
 
 #THANKS
 PhotoView from https://github.com/bm-x/PhotoView
@@ -114,7 +78,7 @@ Custom Activity Animations from https://www.youtube.com/watch?v=CPxkoe2MraA
 
 ## License
 
-Copyright 2015 Bruce too
+Copyright 2015-2016 Bruce too
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
