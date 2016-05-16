@@ -6,27 +6,30 @@ import android.os.Parcelable;
 import android.widget.ImageView;
 
 /**
- * Created by Bruce Too
- * On 9/28/15.
- * At 19:37
- * Image图片在界面显示时的坐标位置等
+ * Created by Bruce too
+ * On 2016/4/18
+ * At 20:26
  */
-public class ImageInfo implements Parcelable{
+public class ImageInfo implements Parcelable {
+
     // 内部图片在整个窗口的位置
     RectF mRect = new RectF();
+    // 控件在窗口的位置
     RectF mLocalRect = new RectF();
     RectF mImgRect = new RectF();
     RectF mWidgetRect = new RectF();
     float mScale;
-    ImageView.ScaleType mScaleType;//image的scaleType属性
+    float mDegrees;
+    ImageView.ScaleType mScaleType;
 
-    public ImageInfo(RectF rect, RectF local, RectF img, RectF widget, float scale, ImageView.ScaleType scaleType) {
-        this.mRect.set(rect);
-        this.mLocalRect.set(local);
-        this.mImgRect.set(img);
-        this.mWidgetRect.set(widget);
-        this.mScale = scale;
-        this.mScaleType = scaleType;
+    public ImageInfo(RectF rect, RectF local, RectF img, RectF widget, float scale, float degrees, ImageView.ScaleType scaleType) {
+        mRect.set(rect);
+        mLocalRect.set(local);
+        mImgRect.set(img);
+        mWidgetRect.set(widget);
+        mScale = scale;
+        mScaleType = scaleType;
+        mDegrees = degrees;
     }
 
     protected ImageInfo(Parcel in) {
@@ -35,6 +38,7 @@ public class ImageInfo implements Parcelable{
         mImgRect = in.readParcelable(RectF.class.getClassLoader());
         mWidgetRect = in.readParcelable(RectF.class.getClassLoader());
         mScale = in.readFloat();
+        mDegrees = in.readFloat();
     }
 
     public static final Creator<ImageInfo> CREATOR = new Creator<ImageInfo>() {
@@ -55,11 +59,12 @@ public class ImageInfo implements Parcelable{
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(mRect, flags);
-        dest.writeParcelable(mLocalRect, flags);
-        dest.writeParcelable(mImgRect, flags);
-        dest.writeParcelable(mWidgetRect, flags);
-        dest.writeFloat(mScale);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeParcelable(mRect, i);
+        parcel.writeParcelable(mLocalRect, i);
+        parcel.writeParcelable(mImgRect, i);
+        parcel.writeParcelable(mWidgetRect, i);
+        parcel.writeFloat(mScale);
+        parcel.writeFloat(mDegrees);
     }
 }

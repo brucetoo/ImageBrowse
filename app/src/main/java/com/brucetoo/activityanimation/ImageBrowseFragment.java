@@ -31,9 +31,9 @@ import java.util.ArrayList;
  * Created by Bruce Too
  * On 9/28/15.
  * At 19:37
- * ViewPagerFragment add into MainActivity
+ * ImageBrowseFragment add into MainActivity
  */
-public class ViewPagerFragment extends Fragment {
+public class ImageBrowseFragment extends Fragment {
 
     private ReboundViewPager viewPager;
     private TextView tips; //viewpager indicator
@@ -43,8 +43,8 @@ public class ViewPagerFragment extends Fragment {
     private ArrayList<ImageInfo> imageInfos;
     private int position;
 
-    public static ViewPagerFragment getInstance(Bundle imgs) {
-        ViewPagerFragment fragment = new ViewPagerFragment();
+    public static ImageBrowseFragment newInstance(Bundle imgs) {
+        ImageBrowseFragment fragment = new ImageBrowseFragment();
         fragment.setArguments(imgs);
         return fragment;
     }
@@ -108,14 +108,14 @@ public class ViewPagerFragment extends Fragment {
                 photoView.setOnKeyListener(pressKeyListener);//add key listener to listen back press
                 photoView.setOnClickListener(onClickListener);
                 photoView.setTag(pos);
-                photoView.touchEnable(true);
+                photoView.enable();
 
                 container.addView(view);
 
 //   Sample Use Example
 //                PhotoView view = new PhotoView(getActivity());
 //                view.touchEnable(true);
-//                ImageLoader.getInstance().displayImage(imgs.get(pos), view,
+//                ImageLoader.newInstance().displayImage(imgs.get(pos), view,
 //                        new DisplayImageOptions.Builder()
 //                                .showImageOnLoading(android.R.color.darker_gray)
 //                                .cacheInMemory(true).cacheOnDisk(true).build());
@@ -184,7 +184,7 @@ public class ViewPagerFragment extends Fragment {
     }
 
     private void popFragment() {
-        if (!ViewPagerFragment.this.isResumed()) {
+        if (!ImageBrowseFragment.this.isResumed()) {
             return;
         }
         final FragmentManager fragmentManager = getFragmentManager();

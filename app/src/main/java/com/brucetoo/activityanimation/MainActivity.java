@@ -88,7 +88,7 @@ public class MainActivity extends FragmentActivity {
                     }
                     parent.getChildAt(position);
                     bundle.putParcelableArrayList("infos", imgImageInfos);
-                    getSupportFragmentManager().beginTransaction().replace(Window.ID_ANDROID_CONTENT, ViewPagerFragment.getInstance(bundle), "ViewPagerFragment")
+                    getSupportFragmentManager().beginTransaction().replace(Window.ID_ANDROID_CONTENT, ImageBrowseFragment.newInstance(bundle), "ViewPagerFragment")
                             .addToBackStack(null).commit();
                 }
 
@@ -128,7 +128,7 @@ public class MainActivity extends FragmentActivity {
                     new DisplayImageOptions.Builder()
                             .showImageOnLoading(android.R.color.darker_gray)
                             .cacheInMemory(true).cacheOnDisk(true).build(), loadingListener);
-            p.touchEnable(false);//disable touch
+            p.disenable();//enable touch
             return p;
         }
     }

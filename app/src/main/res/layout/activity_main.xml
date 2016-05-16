@@ -11,11 +11,4 @@
         android:horizontalSpacing="5dp"
         android:numColumns="3"
         android:verticalSpacing="5dp"/>
-
-    <!--<FrameLayout-->
-        <!--android:id="@+id/fragment_viewpager"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
-    <!--</FrameLayout>-->
-
 </FrameLayout>
