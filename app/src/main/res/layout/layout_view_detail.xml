@@ -7,14 +7,14 @@
     PhotoView imageInfo not right
     Try working on...
     -->
- <com.brucetoo.activityanimation.widget.PhotoView
+ <com.brucetoo.imagebrowse.widget.PhotoView
      android:layout_width="match_parent"
      android:layout_height="match_parent"
      android:id="@+id/image_detail"
      android:layout_gravity="center"
      />
 
-    <com.brucetoo.activityanimation.widget.MaterialProgressBar
+    <com.brucetoo.imagebrowse.widget.MaterialProgressBar
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_gravity="center"

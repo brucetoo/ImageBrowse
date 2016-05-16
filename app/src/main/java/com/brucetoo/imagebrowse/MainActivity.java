@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.brucetoo.activityanimation;
+package com.brucetoo.imagebrowse;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -28,8 +28,8 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.brucetoo.activityanimation.widget.ImageInfo;
-import com.brucetoo.activityanimation.widget.PhotoView;
+import com.brucetoo.imagebrowse.widget.ImageInfo;
+import com.brucetoo.imagebrowse.widget.PhotoView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;

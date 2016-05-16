@@ -1,4 +1,4 @@
-package com.brucetoo.activityanimation;
+package com.brucetoo.imagebrowse;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -17,10 +17,10 @@ import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.brucetoo.activityanimation.widget.ImageInfo;
-import com.brucetoo.activityanimation.widget.MaterialProgressBar;
-import com.brucetoo.activityanimation.widget.PhotoView;
-import com.brucetoo.activityanimation.widget.ReboundViewPager;
+import com.brucetoo.imagebrowse.widget.ImageInfo;
+import com.brucetoo.imagebrowse.widget.MaterialProgressBar;
+import com.brucetoo.imagebrowse.widget.PhotoView;
+import com.brucetoo.imagebrowse.widget.ReboundViewPager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;

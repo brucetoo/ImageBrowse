@@ -1,4 +1,4 @@
-package com.brucetoo.activityanimation;
+package com.brucetoo.imagebrowse;
 
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;

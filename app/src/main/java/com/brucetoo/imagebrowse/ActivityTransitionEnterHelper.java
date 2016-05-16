@@ -1,4 +1,4 @@
-package com.brucetoo.activityanimation;
+package com.brucetoo.imagebrowse;
 
 import android.app.Activity;
 import android.content.Intent;

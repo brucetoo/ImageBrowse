@@ -1,4 +1,4 @@
-package com.brucetoo.activityanimation.widget;
+package com.brucetoo.imagebrowse.widget;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
