@@ -26,7 +26,7 @@ The same as the latest android WeChat moments image browse effect
 
     5.ViewPager has rebound effect when edge of ViewPager is available..
 
-#USAGE
+#USAGE for fragment
   
 1.Handle init PhotoView(also available xml)
 
@@ -65,6 +65,34 @@ The same as the latest android WeChat moments image browse effect
    ```
    
    More detail please see demo code.
+   
+ #USEAGE for **Dialog** fragment
+ 
+ 1.set dialog framgent and flag something
+ ```java
+   
+     @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        return new Dialog(getActivity(), IdentifierUtil.getStyleId(getActivity(), "DialogTheme"));
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getDialog().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+    }
+ 
+ ```
+ 
+ ```xml
+ 
+    <style name="DialogTheme" parent="CCDHDSecondDialogFragmentTheme">
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+ 
+ ```
+ 2.The left is same as fragment usage...
 
 #NOTE
  **if you use ReboundViewPager to get rebound effect,this way may cause a problem when doing scale operation at first or last PhotoView 
