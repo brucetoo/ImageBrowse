@@ -22,6 +22,7 @@ import android.widget.Scroller;
  * Created by Bruce too
  * On 2016/4/18
  * At 20:26
+ * code from https://github.com/bm-x/PhotoView
  */
 public class PhotoView extends ImageView {
 

@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.brucetoo.imagebrowse.widget.ImageInfo;
 import com.brucetoo.imagebrowse.widget.MaterialProgressBar;
 import com.brucetoo.imagebrowse.widget.PhotoView;
-import com.brucetoo.imagebrowse.widget.ReboundViewPager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -35,7 +34,7 @@ import java.util.ArrayList;
  */
 public class ImageBrowseFragment extends Fragment {
 
-    private ReboundViewPager viewPager;
+    private ViewPager viewPager;
     private TextView tips; //viewpager indicator
     private ArrayList<String> imgs;
     private ImageInfo imageInfo;
@@ -59,7 +58,7 @@ public class ImageBrowseFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewPager = (ReboundViewPager) view.findViewById(R.id.viewpager);
+        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         tips = (TextView) view.findViewById(R.id.text);
         mask = view.findViewById(R.id.mask);
 
@@ -72,7 +71,7 @@ public class ImageBrowseFragment extends Fragment {
         position = bundle.getInt("position", 0);
         tips.setText((position + 1) + "/" + imgs.size());
 
-        viewPager.getOverscrollView().setAdapter(new PagerAdapter() {
+        viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
                 return imgs.size();
@@ -138,7 +137,7 @@ public class ImageBrowseFragment extends Fragment {
             }
         });
 
-        viewPager.getOverscrollView().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -156,7 +155,7 @@ public class ImageBrowseFragment extends Fragment {
         });
 
         //set current position
-        viewPager.getOverscrollView().setCurrentItem(position);
+        viewPager.setCurrentItem(position);
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
