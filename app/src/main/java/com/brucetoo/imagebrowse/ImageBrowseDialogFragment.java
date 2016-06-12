@@ -1,16 +1,17 @@
 package com.brucetoo.imagebrowse;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -28,11 +29,12 @@ import java.util.ArrayList;
 
 /**
  * Created by Bruce Too
- * On 9/28/15.
- * At 19:37
- * ImageBrowseFragment add into MainActivity
+ * On 6/12/16.
+ * At 10:10
+ * ImageBrowseDialogFragment
+ * FullScreen or not has different situation... Status Bar height
  */
-public class ImageBrowseFragment extends Fragment {
+public class ImageBrowseDialogFragment extends DialogFragment {
 
     private ViewPager viewPager;
     private TextView tips; //viewpager indicator
@@ -41,11 +43,26 @@ public class ImageBrowseFragment extends Fragment {
     private View mask;//background view
     private ArrayList<ImageInfo> imageInfos;
     private int position;
+    private boolean isExit = false;
 
-    public static ImageBrowseFragment newInstance(Bundle imgs) {
-        ImageBrowseFragment fragment = new ImageBrowseFragment();
+    public static ImageBrowseDialogFragment newInstance(Bundle imgs) {
+        ImageBrowseDialogFragment fragment = new ImageBrowseDialogFragment();
         fragment.setArguments(imgs);
         return fragment;
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        return new Dialog(getActivity(),R.style.DialogTheme);
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        /**NOTE if the anchor activity is FullScreen,the following code must be used.
+        and {@link ImageInfo#correct(int[], int)} the second params must be Zero..
+        */
+//      getDialog().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
     }
 
     @Nullable
@@ -110,24 +127,6 @@ public class ImageBrowseFragment extends Fragment {
                 photoView.enable();
 
                 container.addView(view);
-
-//   Sample Use Example
-//                PhotoView view = new PhotoView(getActivity());
-//                view.touchEnable(true);
-//                ImageLoader.newInstance().displayImage(imageUrls.get(pos), view,
-//                        new DisplayImageOptions.Builder()
-//                                .showImageOnLoading(android.R.color.darker_gray)
-//                                .cacheInMemory(true).cacheOnDisk(true).build());
-//                if(position == pos){//only animate when position equals u click in pre layout
-//                    view.animateFrom(imageInfo);
-//                }
-//                //force to get focal point,to listen key listener
-//                view.setFocusableInTouchMode(true);
-//                view.requestFocus();
-//                view.setOnKeyListener(pressKeyListener);//add key listener to listen back press
-//                view.setOnClickListener(onClickListener);
-//                view.setTag(pos);
-//                container.addView(view);
                 return view;
             }
 
@@ -137,20 +136,11 @@ public class ImageBrowseFragment extends Fragment {
             }
         });
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
             @Override
             public void onPageSelected(int position) {
+                super.onPageSelected(position);
                 tips.setText((position + 1) + "/" + imageUrls.size());
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
             }
         });
 
@@ -170,28 +160,17 @@ public class ImageBrowseFragment extends Fragment {
         int position = (int) v.getTag();
         //回到上个界面该view的位置
         if(((FrameLayout)v.getParent()).getChildAt(1).getVisibility() == View.VISIBLE){
-            popFragment();
+            dismissAllowingStateLoss();
         }else {
             runExitAnimation(v);
             ((PhotoView) v).animateTo(imageInfos.get(position), new Runnable() {
                 @Override
                 public void run() {
-                    popFragment();
+                    dismissAllowingStateLoss();
                 }
             });
         }
     }
-
-    private void popFragment() {
-        if (!ImageBrowseFragment.this.isResumed()) {
-            return;
-        }
-        final FragmentManager fragmentManager = getFragmentManager();
-        if (fragmentManager != null) {
-            fragmentManager.popBackStack();
-        }
-    }
-
 
     private View.OnKeyListener pressKeyListener = new View.OnKeyListener() {
         @Override
@@ -200,13 +179,15 @@ public class ImageBrowseFragment extends Fragment {
                 if (event.getAction() != KeyEvent.ACTION_UP) {
                     return true;
                 }
-                exitFragment(v);
+                if (!isExit) {
+                    isExit = true;
+                    exitFragment(v);
+                }
                 return true;
             }
             return false;
         }
     };
-
 
     private void runEnterAnimation() {
         AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);

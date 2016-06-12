@@ -1,6 +1,7 @@
 package com.brucetoo.imagebrowse.widget;
 
 import android.graphics.RectF;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.ImageView;
@@ -11,6 +12,11 @@ import android.widget.ImageView;
  * At 20:26
  */
 public class ImageInfo implements Parcelable {
+
+    public static final String INTENT_IMAGE_URLS = "imageUrls";
+    public static final String INTENT_CLICK_IMAGE_POSITION = "preImagePosition";
+    public static final String INTENT_CLICK_IMAGE_INFO = "clickImageInfo";
+    public static final String INTENT_IMAGE_INFOS = "imageInfos";
 
     // 内部图片在整个窗口的位置
     RectF mRect = new RectF();
@@ -39,6 +45,34 @@ public class ImageInfo implements Parcelable {
         mWidgetRect = in.readParcelable(RectF.class.getClassLoader());
         mScale = in.readFloat();
         mDegrees = in.readFloat();
+    }
+
+    /**
+     * Correct ImageInfo Use in {@link com.brucetoo.imagebrowse.ImageBrowseDialogFragment}
+     * @param rootLocation  root view's location in screen
+     * @param statusBarHeight use status bar's height if {@link com.brucetoo.imagebrowse.ImageBrowseDialogFragment#onActivityCreated(Bundle)}
+     *                        no set fragment fullscreen flag...
+     */
+    public void correct(int[] rootLocation, int statusBarHeight){
+        mRect.left = mRect.left + rootLocation[0];
+        mRect.right = mRect.right + rootLocation[0];
+        mRect.top = mRect.top + rootLocation[1] - statusBarHeight;
+        mRect.bottom = mRect.bottom + rootLocation[1] - statusBarHeight;
+
+        mLocalRect.left = mLocalRect.left + rootLocation[0];
+        mLocalRect.right = mLocalRect.right + rootLocation[0];
+        mLocalRect.top = mLocalRect.top + rootLocation[1] - statusBarHeight;
+        mLocalRect.bottom = mLocalRect.bottom + rootLocation[1] - statusBarHeight;
+
+        mImgRect.left = mImgRect.left + rootLocation[0];
+        mImgRect.right = mImgRect.right + rootLocation[0];
+        mImgRect.top = mImgRect.top + rootLocation[1] - statusBarHeight;
+        mImgRect.bottom = mImgRect.bottom + rootLocation[1] - statusBarHeight;
+
+        mWidgetRect.left = mWidgetRect.left + rootLocation[0];
+        mWidgetRect.right = mWidgetRect.right + rootLocation[0];
+        mWidgetRect.top = mWidgetRect.top + rootLocation[1] - statusBarHeight;
+        mWidgetRect.bottom = mWidgetRect.bottom + rootLocation[1] - statusBarHeight;
     }
 
     public static final Creator<ImageInfo> CREATOR = new Creator<ImageInfo>() {

@@ -47,18 +47,13 @@ public class MainActivity extends FragmentActivity {
     private GridView gridView;
     private ArrayList<String> imgList = new ArrayList<>();
     private ArrayList<ImageInfo> imgImageInfos = new ArrayList<>();
+    private View root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        http://img6.cache.netease.com/3g/2015/9/30/20150930091938133ad.jpg
-//        http://img2.cache.netease.com/3g/2015/9/30/2015093000515435aff.jpg
-//        http://img5.cache.netease.com/3g/2015/9/30/20150930075225737e5.jpg
-//        http://img5.cache.netease.com/3g/2015/9/29/20150929213007cd8cd.jpg
-//        http://img3.cache.netease.com/3g/2015/9/29/20150929162747a8bfa.jpg
-//        http://img2.cache.netease.com/3g/2015/9/30/20150930091208cf03c.jpg
         imgList.add(0, "http://img6.cache.netease.com/3g/2015/9/30/20150930091938133ad.jpg");
         imgList.add(1, "http://img2.cache.netease.com/3g/2015/9/30/2015093000515435aff.jpg");
         imgList.add(2, "http://img5.cache.netease.com/3g/2015/9/30/20150930075225737e5.jpg");
@@ -69,17 +64,19 @@ public class MainActivity extends FragmentActivity {
         imgList.add(7, "http://img5.cache.netease.com/3g/2015/9/29/20150929213007cd8cd.jpg");
         imgList.add(8, "http://img3.cache.netease.com/3g/2015/9/29/20150929162747a8bfa.jpg");
         gridView = (GridView) findViewById(R.id.gridview);
+        root = findViewById(R.id.layout_root);
         final ImageAdapter adapter = new ImageAdapter();
         gridView.setAdapter(adapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, long id) {
                 if(view.isEnabled()) {
+                    //Use of ImageBrowseFragment
                     Bundle bundle = new Bundle();
-                    bundle.putStringArrayList("imgs", imgList);
-                    bundle.putParcelable("info", ((PhotoView) view).getInfo());
-                    bundle.putInt("position", position);
+                    bundle.putStringArrayList(ImageInfo.INTENT_IMAGE_URLS, imgList);
+                    bundle.putParcelable(ImageInfo.INTENT_CLICK_IMAGE_INFO, ((PhotoView) view).getInfo());
+                    bundle.putInt(ImageInfo.INTENT_CLICK_IMAGE_POSITION, position);
                     imgImageInfos.clear();
                     //NOTE:if imgList.size >= the visible count in single screen,i will cause NullPointException
                     //because item out of screen have been replaced/reused
@@ -87,13 +84,47 @@ public class MainActivity extends FragmentActivity {
                         imgImageInfos.add(((PhotoView) parent.getChildAt(i)).getInfo());
                     }
                     parent.getChildAt(position);
-                    bundle.putParcelableArrayList("infos", imgImageInfos);
+                    bundle.putParcelableArrayList(ImageInfo.INTENT_IMAGE_INFOS, imgImageInfos);
                     getSupportFragmentManager().beginTransaction().replace(Window.ID_ANDROID_CONTENT, ImageBrowseFragment.newInstance(bundle), "ViewPagerFragment")
                             .addToBackStack(null).commit();
-                }
 
+
+                    //Use of ImageBrowseDialogFragment
+//                    root.post(new Runnable() { // in case root view not inflate complete
+//                        @Override
+//                        public void run() {
+//                            Bundle bundle = new Bundle();
+//                            bundle.putStringArrayList(ImageInfo.INTENT_IMAGE_URLS, imgList);
+//                            final ImageInfo preImgInfo = ((PhotoView) view).getInfo();
+//                            bundle.putParcelable(ImageInfo.INTENT_CLICK_IMAGE_INFO, preImgInfo);
+//                            bundle.putInt(ImageInfo.INTENT_CLICK_IMAGE_POSITION, position);
+//                            imgImageInfos.clear();
+//                            for (int i = 0; i < imgList.size(); i++) {
+//                                imgImageInfos.add(((PhotoView) parent.getChildAt(i)).getInfo());
+//                            }
+//                            bundle.putParcelableArrayList(ImageInfo.INTENT_IMAGE_INFOS, imgImageInfos);
+//                            int[] position = new int[2];
+//                            root.getLocationOnScreen(position);
+//                            //Must correct the ImageInfo in DialogFragment
+//                            preImgInfo.correct(position, getStatusBarHeight());
+//                            for (ImageInfo item : imgImageInfos) {
+//                                item.correct(position,getStatusBarHeight());
+//                            }
+//                            ImageBrowseDialogFragment.newInstance(bundle).show(getSupportFragmentManager(), ImageBrowseDialogFragment.class.getSimpleName());
+//                        }
+//                    });
+                }
             }
         });
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
 
