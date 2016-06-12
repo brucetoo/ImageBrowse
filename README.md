@@ -6,13 +6,10 @@ The same as the latest android WeChat moments image browse effect
 # FINAL EFFECT
 ![EFFECT](./show.gif)
 
-# REBOUND EFFECT
-![REBOUND](./rebound.png)
-
  Feature:
   New add padding and margin support in ImageBrowseFragment
 
-    1.original view: just like normal imageview but with zoom effect
+    1.original view: just like normal imageView but with zoom effect
     2.detail view:
     ① single click back to pre layout with shrink effect
     ② double click to zoom effect(*2.5)
@@ -43,7 +40,7 @@ The same as the latest android WeChat moments image browse effect
   
    ```java
 
-       //view is PhotoView normally,when load inmage from remote,you need call view.enable() to 
+       //view is PhotoView normally,when load image from remote,you need call view.enable() to
        //let PhotoView can't be clicked util it load completed
        if(view.isEnabled()) { 
        Bundle bundle = new Bundle();
@@ -67,75 +64,52 @@ The same as the latest android WeChat moments image browse effect
    More detail please see demo code.
    
 #USEAGE for **Dialog** fragment
- 
- 1.set dialog framgent and flag something
- ```java
-   
-     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new Dialog(getActivity(), IdentifierUtil.getStyleId(getActivity(), "DialogTheme"));
-    }
+
+handle where you click
+```java
+
+    root.post(new Runnable() { // in case root view not inflate complete
+                         @Override
+                         public void run() {
+                             Bundle bundle = new Bundle();
+                             bundle.putStringArrayList(ImageInfo.INTENT_IMAGE_URLS, imgList);
+                             final ImageInfo preImgInfo = ((PhotoView) view).getInfo();
+                             bundle.putParcelable(ImageInfo.INTENT_CLICK_IMAGE_INFO, preImgInfo);
+                             bundle.putInt(ImageInfo.INTENT_CLICK_IMAGE_POSITION, position);
+                             imgImageInfos.clear();
+                             for (int i = 0; i < imgList.size(); i++) {
+                                 imgImageInfos.add(((PhotoView) parent.getChildAt(i)).getInfo());
+                             }
+                             bundle.putParcelableArrayList(ImageInfo.INTENT_IMAGE_INFOS, imgImageInfos);
+                             int[] position = new int[2];
+                             root.getLocationOnScreen(position);
+                             //Must correct the ImageInfo in DialogFragment
+                             preImgInfo.correct(position, getStatusBarHeight());
+                             for (ImageInfo item : imgImageInfos) {
+                                 item.correct(position,getStatusBarHeight());
+                             }
+                             ImageBrowseDialogFragment.newInstance(bundle).show(getSupportFragmentManager(), ImageBrowseDialogFragment.class.getSimpleName());
+                         }
+                     });
+
+```
+
+See ImageBrowseDialogFragment
+If the anchor activity is fullscreen,we need care about if ImageBrowseDialogFragment is fullscreen
+```java
+
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getDialog().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-    }
- 
- ```
- 
- ```xml
- 
-    <style name="DialogTheme" parent="CCDHDSecondDialogFragmentTheme">
-        <item name="android:windowAnimationStyle">@null</item><!--animation must be null -->
-        <item name="android:backgroundDimEnabled">false</item>
-    </style>
- 
- ```
- 2.Inside **Info.class** you need have a method like
- ```java
- 
-  public void correct(int[] position){
-        mRect.left = mRect.left + position[0];
-        mRect.right = mRect.right + position[0];
-        mRect.top = mRect.top + position[1];
-        mRect.bottom = mRect.bottom + position[1];
+      public void onActivityCreated(Bundle savedInstanceState) {
+          super.onActivityCreated(savedInstanceState);
+          /**NOTE if the anchor activity is FullScreen,the following code must be used.
+          and {@link ImageInfo#correct(int[], int)} the second params must be Zero..
+          */
+  //      getDialog().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+          getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+      }
 
-        mLocalRect.left = mLocalRect.left + position[0];
-        mLocalRect.right = mLocalRect.right + position[0];
-        mLocalRect.top = mLocalRect.top + position[1];
-        mLocalRect.bottom = mLocalRect.bottom + position[1];
+```
 
-        mImgRect.left = mImgRect.left + position[0];
-        mImgRect.right = mImgRect.right + position[0];
-        mImgRect.top = mImgRect.top + position[1];
-        mImgRect.bottom = mImgRect.bottom + position[1];
-
-        mWidgetRect.left = mWidgetRect.left + position[0];
-        mWidgetRect.right = mWidgetRect.right + position[0];
-        mWidgetRect.top = mWidgetRect.top + position[1];
-        mWidgetRect.bottom = mWidgetRect.bottom + position[1];
-    }
- 
- ```
- And correct the location when you pass the preoImgInfo,It's where you
- click pre PhotoView,add following code
- ```java
-         int[] position = new int[2];
-         root.getLocationOnScreen(position);//root just the root view of current fragment or activity
-         Info preImgInfo = bundle.getParcelable("preImgInfo");
-         preImgInfo.correct(position);//Note this must be invoke or the animation not fluent
-         bundle.putParcelable("preImgInfo",preImgInfo);
-         ArrayList<Info> imageInfos = bundle.getParcelableArrayList("imgInfos");
-         for (Info item : imageInfos) {
-             item.correct(position);//Note this must be invoke or the animation not fluent
-         }
-         bundle.putParcelableArrayList("imgInfos",imageInfos);
-         ImageBrowseDialogFragment.newInstance(bundle).show(getFragmentManager(),ImageBrowseDialogFragment.class.getSimpleName());
- 
- ```
- 
- 3.The left is same as fragment usage...
 
 #NOTE
  **if you use ReboundViewPager to get rebound effect,this way may cause a problem when doing scale operation at first or last PhotoView 
