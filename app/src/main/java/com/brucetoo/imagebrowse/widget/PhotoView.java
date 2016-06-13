@@ -26,8 +26,8 @@ import android.widget.Scroller;
  */
 public class PhotoView extends ImageView {
 
+    public final static int ANIMATE_DURING = 300;
     private final static int MIN_ROTATE = 35;
-    private final static int ANIMA_DURING = 320;
     private final static float MAX_SCALE = 2.5f;
     private int MAX_OVER_SCROLL = 0;
     private int MAX_FLING_OVER_SCROLL = 0;
@@ -116,7 +116,7 @@ public class PhotoView extends ImageView {
     }
 
     public static int getDefaultAnimaDuring() {
-        return ANIMA_DURING;
+        return ANIMATE_DURING;
     }
 
     @Override
@@ -912,11 +912,11 @@ public class PhotoView extends ImageView {
         void withTranslate(int startX, int startY, int deltaX, int deltaY) {
             mLastTranslateX = 0;
             mLastTranslateY = 0;
-            mTranslateScroller.startScroll(0, 0, deltaX, deltaY, ANIMA_DURING);
+            mTranslateScroller.startScroll(0, 0, deltaX, deltaY, ANIMATE_DURING);
         }
 
         void withScale(float form, float to) {
-            mScaleScroller.startScroll((int) (form * 10000), 0, (int) ((to - form) * 10000), 0, ANIMA_DURING);
+            mScaleScroller.startScroll((int) (form * 10000), 0, (int) ((to - form) * 10000), 0, ANIMATE_DURING);
         }
 
         void withClip(float fromX, float fromY, float deltaX, float deltaY, int d, ClipCalculate c) {
@@ -925,7 +925,7 @@ public class PhotoView extends ImageView {
         }
 
         void withRotate(int fromDegrees, int toDegrees) {
-            mRotateScroller.startScroll(fromDegrees, 0, toDegrees - fromDegrees, 0, ANIMA_DURING);
+            mRotateScroller.startScroll(fromDegrees, 0, toDegrees - fromDegrees, 0, ANIMATE_DURING);
         }
 
         void withRotate(int fromDegrees, int toDegrees, int during) {
@@ -1139,7 +1139,7 @@ public class PhotoView extends ImageView {
 
             float scaleX = imageInfo.mImgRect.width() / mine.mImgRect.width();
             float scaleY = imageInfo.mImgRect.height() / mine.mImgRect.height();
-            float scale = scaleX < scaleY ? scaleX : scaleY;
+            float scale = scaleX < scaleY ? scaleY : scaleX;//choose the max one
 
             //设置位置之前先检查是否有 目标PhotoView是否有 margin,或者其父对应的padding
             ViewGroup parent = (ViewGroup) getParent();
@@ -1169,7 +1169,7 @@ public class PhotoView extends ImageView {
 
                 ClipCalculate c = imageInfo.mScaleType == ScaleType.FIT_START ? new START() : imageInfo.mScaleType == ScaleType.FIT_END ? new END() : new OTHER();
 
-                mTranslate.withClip(clipX, clipY, 1 - clipX, 1 - clipY, ANIMA_DURING / 3, c);
+                mTranslate.withClip(clipX, clipY, 1 - clipX, 1 - clipY, ANIMATE_DURING / 3, c);
 
                 mTmpMatrix.setScale(clipX, clipY, (mImgRect.left + mImgRect.right) / 2, c.calculateTop());
                 mTmpMatrix.mapRect(mTranslate.mClipRect, mImgRect);
@@ -1213,7 +1213,7 @@ public class PhotoView extends ImageView {
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) getLayoutParams();
             mTranslate.withTranslate(0, 0, (int) (tcx - mScaleCenter.x - params.leftMargin - parent.getPaddingLeft()), (int) (tcy - mScaleCenter.y - params.topMargin - parent.getPaddingTop()));
             mTranslate.withScale(mScale, scale);
-            mTranslate.withRotate((int) mDegrees, (int) imageInfo.mDegrees, ANIMA_DURING * 2 / 3);
+            mTranslate.withRotate((int) mDegrees, (int) imageInfo.mDegrees, ANIMATE_DURING * 2 / 3);
 
             if (imageInfo.mWidgetRect.width() < imageInfo.mRect.width() || imageInfo.mWidgetRect.height() < imageInfo.mRect.height()) {
                 float clipX = imageInfo.mWidgetRect.width() / imageInfo.mRect.width();
@@ -1228,9 +1228,9 @@ public class PhotoView extends ImageView {
                 postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mTranslate.withClip(1, 1, -1 + cx, -1 + cy, ANIMA_DURING / 2, c);
+                        mTranslate.withClip(1, 1, -1 + cx, -1 + cy, ANIMATE_DURING / 2, c);
                     }
-                }, ANIMA_DURING / 2);
+                }, ANIMATE_DURING / 2);
             }
 
             mCompleteCallBack = completeCallBack;

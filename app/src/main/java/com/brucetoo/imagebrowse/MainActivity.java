@@ -54,15 +54,24 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        imgList.add(0, "http://img6.cache.netease.com/3g/2015/9/30/20150930091938133ad.jpg");
-        imgList.add(1, "http://img2.cache.netease.com/3g/2015/9/30/2015093000515435aff.jpg");
-        imgList.add(2, "http://img5.cache.netease.com/3g/2015/9/30/20150930075225737e5.jpg");
-        imgList.add(3, "http://img5.cache.netease.com/3g/2015/9/29/20150929213007cd8cd.jpg");
-        imgList.add(4, "http://img3.cache.netease.com/3g/2015/9/29/20150929162747a8bfa.jpg");
-        imgList.add(5, "http://img2.cache.netease.com/3g/2015/9/30/20150930091208cf03c.jpg");
-        imgList.add(6, "http://img2.cache.netease.com/3g/2015/9/30/2015093000515435aff.jpg");
-        imgList.add(7, "http://img5.cache.netease.com/3g/2015/9/29/20150929213007cd8cd.jpg");
-        imgList.add(8, "http://img3.cache.netease.com/3g/2015/9/29/20150929162747a8bfa.jpg");
+        imgList.add(0, "http://cdn.at.cn/upload/146336617940.jpg");
+        imgList.add(1, "http://cdn.at.cn/upload/146540079128.jpg");
+        imgList.add(2, "http://cdn.at.cn/upload/146528287960.jpg");
+        imgList.add(3, "http://cdn.at.cn/upload/146271377052.jpg");
+        imgList.add(4, "http://cdn.at.cn/upload/146502027460.jpg");
+        imgList.add(5, "http://cdn.at.cn/upload/146296005117.jpg");
+        imgList.add(6, "http://cdn.at.cn/upload/146386101517.jpg");
+        imgList.add(7, "http://cdn.at.cn/upload/146289180072.jpg");
+        imgList.add(8, "http://cdn.at.cn/upload/146378563799.jpg");
+//        imgList.add(0, "http://img6.cache.netease.com/3g/2015/9/30/20150930091938133ad.jpg");
+//        imgList.add(1, "http://img2.cache.netease.com/3g/2015/9/30/2015093000515435aff.jpg");
+//        imgList.add(2, "http://img5.cache.netease.com/3g/2015/9/30/20150930075225737e5.jpg");
+//        imgList.add(3, "http://img5.cache.netease.com/3g/2015/9/29/20150929213007cd8cd.jpg");
+//        imgList.add(4, "http://img3.cache.netease.com/3g/2015/9/29/20150929162747a8bfa.jpg");
+//        imgList.add(5, "http://img2.cache.netease.com/3g/2015/9/30/20150930091208cf03c.jpg");
+//        imgList.add(6, "http://img2.cache.netease.com/3g/2015/9/30/2015093000515435aff.jpg");
+//        imgList.add(7, "http://img5.cache.netease.com/3g/2015/9/29/20150929213007cd8cd.jpg");
+//        imgList.add(8, "http://img3.cache.netease.com/3g/2015/9/29/20150929162747a8bfa.jpg");
         gridView = (GridView) findViewById(R.id.gridview);
         root = findViewById(R.id.layout_root);
         final ImageAdapter adapter = new ImageAdapter();
@@ -71,7 +80,7 @@ public class MainActivity extends FragmentActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, long id) {
-                if(view.isEnabled()) {
+                if (view.isEnabled()) {
                     //Use of ImageBrowseFragment
                     Bundle bundle = new Bundle();
                     bundle.putStringArrayList(ImageInfo.INTENT_IMAGE_URLS, imgList);
@@ -154,7 +163,8 @@ public class MainActivity extends FragmentActivity {
             p.setEnabled(false);
 
             //get thumbnailurl to save user data...like WeChat does
-            String thumbnailUrl = getThumbnailImageUrl(imgList.get(i),0,0);
+            String thumbnailUrl = getThumbnailImageUrl(imgList.get(i), 0, 0);
+//            String thumbnailUrl = imgList.get(i).replace("upload/", "upload/w/");
             ImageLoader.getInstance().displayImage(thumbnailUrl, p,
                     new DisplayImageOptions.Builder()
                             .showImageOnLoading(android.R.color.darker_gray)
@@ -173,16 +183,17 @@ public class MainActivity extends FragmentActivity {
 
     /**
      * get a thumbnail image url from original url
+     *
      * @param imgUrl original image url
      * @param width  width u need
      * @param height height u need
      * @return the number(85) in below url indicate the quality of original image
      */
-    public String getThumbnailImageUrl(String imgUrl,int width,int height){
-        String url="http://imgsize.ph.126.net/?imgurl=data1_data2xdata3x0x85.jpg&enlarge=true";
+    public String getThumbnailImageUrl(String imgUrl, int width, int height) {
+        String url = "http://imgsize.ph.126.net/?imgurl=data1_data2xdata3x0x85.jpg&enlarge=true";
         width = (int) (getResources().getDisplayMetrics().density * 100);
         height = (int) (getResources().getDisplayMetrics().density * 100); //just for convenient
-        url=url.replaceAll("data1", imgUrl).replaceAll("data2", width+"").replaceAll("data3", height+"");
+        url = url.replaceAll("data1", imgUrl).replaceAll("data2", width + "").replaceAll("data3", height + "");
         return url;
     }
 

@@ -210,14 +210,14 @@ public class ImageBrowseFragment extends Fragment {
 
     private void runEnterAnimation() {
         AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
-        alphaAnimation.setDuration(300);
+        alphaAnimation.setDuration(PhotoView.ANIMATE_DURING);
         alphaAnimation.setInterpolator(new AccelerateInterpolator());
         mask.startAnimation(alphaAnimation);
     }
 
     public void runExitAnimation(final View view) {
         AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0);
-        alphaAnimation.setDuration(300);
+        alphaAnimation.setDuration(PhotoView.ANIMATE_DURING);
         alphaAnimation.setInterpolator(new AccelerateInterpolator());
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
