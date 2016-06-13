@@ -7,6 +7,10 @@ The same as the latest android WeChat moments image browse effect
 ![EFFECT](./show.gif)
 
  Feature:
+  **[Big improvement](https://github.com/brucetoo/ImageBrowse/commit/83a600e94714ecbd0fe5d11cd789d89e255f5b3c)**
+   
+  **Add thumbnail support when full image is not cache just like WeChat does.**
+   
   New add padding and margin support in ImageBrowseFragment
 
     1.original view: just like normal imageView but with zoom effect
