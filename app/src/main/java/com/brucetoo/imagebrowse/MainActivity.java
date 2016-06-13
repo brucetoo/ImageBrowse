@@ -19,6 +19,7 @@ package com.brucetoo.imagebrowse;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -163,7 +164,7 @@ public class MainActivity extends FragmentActivity {
             p.setEnabled(false);
 
             //get thumbnailurl to save user data...like WeChat does
-            String thumbnailUrl = getThumbnailImageUrl(imgList.get(i), 0, 0);
+            String thumbnailUrl = Utils.getThumbnailImageUrl(MainActivity.this,imgList.get(i), 0, 0);
 //            String thumbnailUrl = imgList.get(i).replace("upload/", "upload/w/");
             ImageLoader.getInstance().displayImage(thumbnailUrl, p,
                     new DisplayImageOptions.Builder()
@@ -181,27 +182,28 @@ public class MainActivity extends FragmentActivity {
         }
     };
 
-    /**
-     * get a thumbnail image url from original url
-     *
-     * @param imgUrl original image url
-     * @param width  width u need
-     * @param height height u need
-     * @return the number(85) in below url indicate the quality of original image
-     */
-    public String getThumbnailImageUrl(String imgUrl, int width, int height) {
-        String url = "http://imgsize.ph.126.net/?imgurl=data1_data2xdata3x0x85.jpg&enlarge=true";
-        width = (int) (getResources().getDisplayMetrics().density * 100);
-        height = (int) (getResources().getDisplayMetrics().density * 100); //just for convenient
-        url = url.replaceAll("data1", imgUrl).replaceAll("data2", width + "").replaceAll("data3", height + "");
-        return url;
-    }
+//    /**
+//     * get a thumbnail image url from original url
+//     *
+//     * @param imgUrl original image url
+//     * @param width  width u need
+//     * @param height height u need
+//     * @return the number(85) in below url indicate the quality of original image
+//     */
+//    public String getThumbnailImageUrl(String imgUrl, int width, int height) {
+//        String url = "http://imgsize.ph.126.net/?imgurl=data1_data2xdata3x0x85.jpg&enlarge=true";
+//        width = (int) (getResources().getDisplayMetrics().density * 100);
+//        height = (int) (getResources().getDisplayMetrics().density * 100); //just for convenient
+//        url = url.replaceAll("data1", imgUrl).replaceAll("data2", width + "").replaceAll("data3", height + "");
+//        return url;
+//    }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         //just for test to clean cache
         ImageLoader.getInstance().clearMemoryCache();
         ImageLoader.getInstance().clearDiskCache();
+        Log.i("ImageBrowse", "onDestroy");
+        super.onDestroy();
     }
 }

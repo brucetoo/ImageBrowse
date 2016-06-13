@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
     <!--
     Here is a bug,if layout_width=wrap_content,layout_height=wrap_content
     PhotoView imageInfo not right
     Try working on...
     -->
- <com.brucetoo.imagebrowse.widget.PhotoView
-     android:layout_width="match_parent"
-     android:layout_height="match_parent"
-     android:id="@+id/image_detail"
-     android:layout_gravity="center"
-     />
+    <com.brucetoo.imagebrowse.widget.PhotoView
+        android:id="@+id/image_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        />
+   <com.brucetoo.imagebrowse.widget.PhotoView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:id="@+id/image_thumbnail"
+       android:layout_gravity="center"
+       />
 
     <com.brucetoo.imagebrowse.widget.MaterialProgressBar
+        android:id="@+id/progress"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_gravity="center"
-        android:id="@+id/progress"
         />
 </FrameLayout>

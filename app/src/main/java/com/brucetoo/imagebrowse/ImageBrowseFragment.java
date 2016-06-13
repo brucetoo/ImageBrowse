@@ -20,8 +20,6 @@ import android.widget.TextView;
 import com.brucetoo.imagebrowse.widget.ImageInfo;
 import com.brucetoo.imagebrowse.widget.MaterialProgressBar;
 import com.brucetoo.imagebrowse.widget.PhotoView;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.util.ArrayList;
@@ -71,6 +69,8 @@ public class ImageBrowseFragment extends Fragment {
 
         tips.setText((position + 1) + "/" + imageUrls.size());
 
+        //NOTE: default viewPager has two page instance hold on.
+        //if you like,just custom by viewPager.setOffscreenPageLimit();
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -86,20 +86,38 @@ public class ImageBrowseFragment extends Fragment {
             public Object instantiateItem(ViewGroup container, int pos) {
                 View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_view_detail, null, false);
                 final PhotoView photoView = (PhotoView) view.findViewById(R.id.image_detail);
+                final PhotoView thumbnailView = (PhotoView) view.findViewById(R.id.image_thumbnail);
                 final MaterialProgressBar progressBar = (MaterialProgressBar) view.findViewById(R.id.progress);
-                if (position == pos && ImageLoader.getInstance().getDiskCache().get(imageUrls.get(pos)) != null) {//only animate when position equals u click in pre layout
-                    photoView.animateFrom(imageInfo);
-                }
-                //load pic from remote
-                ImageLoader.getInstance().displayImage(imageUrls.get(pos), photoView,
-                        new DisplayImageOptions.Builder()
-                                .cacheInMemory(true).cacheOnDisk(true).build(), new SimpleImageLoadingListener() {
-                            @Override
-                            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                                progressBar.setVisibility(View.GONE);
-                            }
 
-                        });
+                String imgUrl = imageUrls.get(pos);
+                final String thumbnailImageUrl = Utils.getThumbnailImageUrl(getActivity(), imgUrl, 0, 0);
+
+                if(Utils.isImageCacheAvailable(imgUrl)){//full image cache is available
+                    if(pos == position){//only animation in where you click
+                        photoView.animateFrom(imageInfo);
+                    }
+                    progressBar.setVisibility(View.GONE);
+                    thumbnailView.setVisibility(View.GONE);
+                    Utils.displayImageWithCache(imgUrl,photoView,null);
+                }else {
+
+                    if(Utils.isImageCacheAvailable(thumbnailImageUrl)){//if we had thumbnail image cache available
+                        thumbnailView.setVisibility(View.VISIBLE);
+                        thumbnailView.animateFrom(imageInfo);//animate from pre layout photoView
+                    }
+
+                    Utils.displayImageWithCache(thumbnailImageUrl,thumbnailView,null);
+
+                    Utils.displayImageWithCache(imgUrl,photoView,new SimpleImageLoadingListener() {
+                                @Override
+                                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                                    progressBar.setVisibility(View.GONE);
+                                    thumbnailView.setVisibility(View.GONE);
+                                    //once we load full image,we need animate from thumbnail view
+                                    photoView.animateFrom(thumbnailView.getInfo());
+                                }});
+                }
+
 
                 //force to get focal point,to listen key listener
                 photoView.setFocusableInTouchMode(true);
